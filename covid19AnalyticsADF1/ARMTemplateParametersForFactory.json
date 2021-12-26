@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "covid19AnalyticsADF1"
+		},
+		"ls_blob_covid19reportingstoac_connectionString": {
+			"value": ""
+		},
+		"ls_dl_covid19reportingdtlk_accountKey": {
+			"value": ""
+		},
+		"ls_dl_covid19reportingdtlk_properties_typeProperties_url": {
+			"value": "https://covid19reportingdtlk.dfs.core.windows.net"
+		},
+		"ls_http_ecdc_eu_data_properties_typeProperties_url": {
+			"value": "@{linkedService().sourceBaseURL}"
+		},
+		"tr_start_copy_process_properties_typeProperties_scope": {
+			"value": "/subscriptions/3ceb2155-dd29-4741-8520-aed8ee3f4763/resourceGroups/pacificpgkRG/providers/Microsoft.Storage/storageAccounts/covid19reportingstoac"
+		}
+	}
+}
