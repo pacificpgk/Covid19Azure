@@ -1,0 +1,25 @@
+{
+	"name": "tr_start_copy_process",
+	"properties": {
+		"description": "Trigger to start the copy process as soon as input file is available.",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pl_ingest_population_data",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/population/blobs/population_by_age.tsv.gz",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/3ceb2155-dd29-4741-8520-aed8ee3f4763/resourceGroups/pacificpgkRG/providers/Microsoft.Storage/storageAccounts/covid19reportingstoac",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

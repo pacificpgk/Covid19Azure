@@ -1,0 +1,25 @@
+{
+	"name": "tr_ingest_ecdc_data",
+	"properties": {
+		"description": "Ingests ECDC Data",
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pl_ingest_cdc_data",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2021-12-26T23:15:00",
+				"timeZone": "India Standard Time"
+			}
+		}
+	}
+}
