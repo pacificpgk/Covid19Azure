@@ -6,15 +6,25 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "df_raw_cases_deaths",
+						"referenceName": "ds_raw_cases_deaths",
 						"type": "DatasetReference"
 					},
 					"name": "CasesAndDeathSources"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
-			"script": "source(output(\n\t\tcountry as string,\n\t\tcountry_code as string,\n\t\tcontinent as string,\n\t\tpopulation as string,\n\t\tindicator as string,\n\t\tdaily_count as string,\n\t\tdate as string,\n\t\trate_14_day as string,\n\t\tsource as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CasesAndDeathSources"
+			"transformations": [
+				{
+					"name": "FilterEuroOnly"
+				},
+				{
+					"name": "SelectOnlyReqFields"
+				},
+				{
+					"name": "PivotCounts"
+				}
+			],
+			"script": "source(output(\n\t\tcountry as string,\n\t\tcountry_code as string,\n\t\tcontinent as string,\n\t\tpopulation as integer,\n\t\tindicator as string,\n\t\tdaily_count as short,\n\t\tdate as date,\n\t\trate_14_day as double,\n\t\tsource as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CasesAndDeathSources\nCasesAndDeathSources filter(continent == 'Europe' && not(isNull(country_code))) ~> FilterEuroOnly\nFilterEuroOnly select(mapColumn(\n\t\tcountry,\n\t\tcountry_code,\n\t\tpopulation,\n\t\tindicator,\n\t\tdaily_count,\n\t\tsource,\n\t\teach(match(name == 'date'),\n\t\t\t'reported' + '_date' = $$)\n\t),\n\tskipDuplicateMapInputs: false,\n\tskipDuplicateMapOutputs: true) ~> SelectOnlyReqFields\nSelectOnlyReqFields pivot(groupBy(country,\n\t\tcountry_code,\n\t\tpopulation,\n\t\tsource,\n\t\treported_date,\n\t\tcountry_special = country + ', ' + country_code),\n\tpivotBy(indicator, ['confirmed cases', 'deaths']),\n\tcount = sum(daily_count),\n\tcolumnNaming: '$V_$N',\n\tlateral: true) ~> PivotCounts"
 		}
 	}
 }
