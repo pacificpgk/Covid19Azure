@@ -3,7 +3,7 @@
 	"properties": {
 		"description": "Ingests ECDC Data",
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
