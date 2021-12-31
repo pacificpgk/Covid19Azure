@@ -1,0 +1,41 @@
+{
+	"name": "df_transform_population_by_age",
+	"properties": {
+		"description": "Transform the population data by age",
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_raw_population_by_age",
+						"type": "DatasetReference"
+					},
+					"name": "PopulationByAge"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_country_lookup",
+						"type": "DatasetReference"
+					},
+					"name": "CountrySource"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "DerivedColumn"
+				},
+				{
+					"name": "SelectReqFields"
+				},
+				{
+					"name": "FilterCountryCode"
+				},
+				{
+					"name": "PivotAgeGroup"
+				}
+			],
+			"script": "source(output(\n\t\t{indic_de,geo\\time} as string,\n\t\t{2008 } as double,\n\t\t{2009 } as double,\n\t\t{2010 } as double,\n\t\t{2011 } as double,\n\t\t{2012 } as double,\n\t\t{2013 } as double,\n\t\t{2014 } as double,\n\t\t{2015 } as double,\n\t\t{2016 } as double,\n\t\t{2017 } as double,\n\t\t{2018 } as double,\n\t\t{2019 } as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpartitionBy('hash', 1)) ~> PopulationByAge\nsource(output(\n\t\tcountry as string,\n\t\tcountry_code_2_digit as string,\n\t\tcountry_code_3_digit as string,\n\t\tcontinent as string,\n\t\tpopulation as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CountrySource\nPopulationByAge derive(Age_By_Group = substring(split({indic_de,geo\\time},',')[1],4),\n\t\tCountry_Code = split({indic_de,geo\\time},',')[2]\r\n) ~> DerivedColumn\nDerivedColumn select(mapColumn(\n\t\tAge_By_Group,\n\t\tCountry_Code,\n\t\t{2019 }\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectReqFields\nSelectReqFields filter(length(Country_Code) == 2) ~> FilterCountryCode\nFilterCountryCode pivot(groupBy(Country_Code),\n\tpivotBy(Age_By_Group),\n\tcolumnNaming: '$N$V',\n\tlateral: true) ~> PivotAgeGroup"
+		}
+	}
+}
