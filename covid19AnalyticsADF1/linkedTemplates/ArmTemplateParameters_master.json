@@ -8,6 +8,9 @@
 		"ls_blob_covid19reportingstoac_connectionString": {
 			"value": ""
 		},
+		"ls_db_covid_cluster_accessToken": {
+			"value": ""
+		},
 		"ls_dl_covid19reportingdtlk_accountKey": {
 			"value": ""
 		},

@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_blob_covid19reportingstoac'"
 		},
+		"ls_db_covid_cluster_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'ls_db_covid_cluster'"
+		},
 		"ls_dl_covid19reportingdtlk_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_dl_covid19reportingdtlk'"
@@ -56,6 +60,9 @@
 					},
 					"ls_blob_covid19reportingstoac_connectionString": {
 						"value": "[parameters('ls_blob_covid19reportingstoac_connectionString')]"
+					},
+					"ls_db_covid_cluster_accessToken": {
+						"value": "[parameters('ls_db_covid_cluster_accessToken')]"
 					},
 					"ls_dl_covid19reportingdtlk_accountKey": {
 						"value": "[parameters('ls_dl_covid19reportingdtlk_accountKey')]"
