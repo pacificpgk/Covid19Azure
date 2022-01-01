@@ -17,6 +17,102 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_raw_population_by_age')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dl_covid19reportingdtlk",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "population_by_age.tsv",
+						"folderPath": "population",
+						"fileSystem": "raw"
+					},
+					"columnDelimiter": "\t",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "indic_de,geo\\time,2008 ,2009 ,2010 ,2011 ,2012 ,2013 ,2014 ,2015 ,2016 ,2017 ,2018 ,2019 ",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_raw_testing')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_dl_covid19reportingdtlk",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "testing.csv",
+						"folderPath": "ecdc/testing",
+						"fileSystem": "raw"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "country",
+						"type": "String"
+					},
+					{
+						"name": "country_code",
+						"type": "String"
+					},
+					{
+						"name": "year_week",
+						"type": "String"
+					},
+					{
+						"name": "new_cases",
+						"type": "String"
+					},
+					{
+						"name": "tests_done",
+						"type": "String"
+					},
+					{
+						"name": "population",
+						"type": "String"
+					},
+					{
+						"name": "testing_rate",
+						"type": "String"
+					},
+					{
+						"name": "positivity_rate",
+						"type": "String"
+					},
+					{
+						"name": "testing_data_source",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_ingest_cdc_data')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -521,6 +617,66 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/df_transform_population_by_age')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Transform the population data by age",
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_raw_population_by_age",
+								"type": "DatasetReference"
+							},
+							"name": "PopulationByAge"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_country_lookup",
+								"type": "DatasetReference"
+							},
+							"name": "CountrySource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_processed_Population_By_Age",
+								"type": "DatasetReference"
+							},
+							"name": "PopByAgeSink"
+						}
+					],
+					"transformations": [
+						{
+							"name": "DerivedColumn"
+						},
+						{
+							"name": "SelectReqFields"
+						},
+						{
+							"name": "FilterCountryCode"
+						},
+						{
+							"name": "PivotAgeGroup"
+						},
+						{
+							"name": "LookupForCountryCode"
+						},
+						{
+							"name": "SelectReqFieldForCountryCode"
+						}
+					],
+					"script": "source(output(\n\t\t{indic_de,geo\\time} as string,\n\t\t{2008 } as double,\n\t\t{2009 } as double,\n\t\t{2010 } as double,\n\t\t{2011 } as double,\n\t\t{2012 } as double,\n\t\t{2013 } as double,\n\t\t{2014 } as double,\n\t\t{2015 } as double,\n\t\t{2016 } as double,\n\t\t{2017 } as double,\n\t\t{2018 } as double,\n\t\t{2019 } as double\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpartitionBy('hash', 1)) ~> PopulationByAge\nsource(output(\n\t\tcountry as string,\n\t\tcountry_code_2_digit as string,\n\t\tcountry_code_3_digit as string,\n\t\tcontinent as string,\n\t\tpopulation as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CountrySource\nPopulationByAge derive(Age_By_Group = substring(split({indic_de,geo\\time},',')[1],4),\n\t\tCountry_Code = split({indic_de,geo\\time},',')[2],\n\t\t{2019_Mod} = coalesce({2019 },0)) ~> DerivedColumn\nDerivedColumn select(mapColumn(\n\t\tAge_By_Group,\n\t\tCountry_Code,\n\t\t{2019} = {2019_Mod}\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectReqFields\nSelectReqFields filter(length(Country_Code) == 2) ~> FilterCountryCode\nFilterCountryCode pivot(groupBy(Country_Code),\n\tpivotBy(Age_By_Group, ['Y0_14', 'Y15_24', 'Y25_49', 'Y50_64', 'Y65_79', 'Y80_MAX']),\n\t{} = sum({2019}),\n\tcolumnNaming: '$V$N',\n\tlateral: false,\n\tpartitionBy('hash', 1)) ~> PivotAgeGroup\nPivotAgeGroup, CountrySource lookup(Country_Code == country_code_2_digit,\n\tmultiple: false,\n\tpickup: 'any',\n\tpartitionBy('hash', 1),\n\tbroadcast: 'auto')~> LookupForCountryCode\nLookupForCountryCode select(mapColumn(\n\t\tcountry,\n\t\tcountry_code_2_digit,\n\t\tcountry_code_3_digit,\n\t\tpopulation,\n\t\tAge_Group_0_14 = Y0_14,\n\t\tAge_Group_15_24 = Y15_24,\n\t\tAge_Group_25_49 = Y25_49,\n\t\tAge_Group_50_64 = Y50_64,\n\t\tAge_Group_65_79 = Y65_79,\n\t\tAge_Group_80_MAZ = Y80_MAX\n\t),\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectReqFieldForCountryCode\nSelectReqFieldForCountryCode sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['processed_population_by_age'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> PopByAgeSink"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_raw_population_by_age')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/df_transform_testing')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -583,7 +739,9 @@
 					"script": "source(output(\n\t\tcountry as string,\n\t\tcountry_code as string,\n\t\tyear_week as string,\n\t\tnew_cases as integer,\n\t\ttests_done as integer,\n\t\tpopulation as integer,\n\t\ttesting_rate as double,\n\t\tpositivity_rate as double,\n\t\ttesting_data_source as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tpartitionBy('hash', 1)) ~> TestingSource\nsource(output(\n\t\tcountry as string,\n\t\tcountry_code_2_digit as string,\n\t\tcountry_code_3_digit as string,\n\t\tcontinent as string,\n\t\tpopulation as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CountrySource\nsource(output(\n\t\tdate_key as string,\n\t\tdate as date,\n\t\tyear as string,\n\t\tmonth as short,\n\t\tday as short,\n\t\tday_name as string,\n\t\tday_of_year as short,\n\t\tweek_of_month as short,\n\t\tweek_of_year as string,\n\t\tmonth_name as string,\n\t\tyear_month as integer,\n\t\tyear_week as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> DimDateSource\nTestingSource select(mapColumn(\n\t\tcountry,\n\t\tcountry_code,\n\t\tyear_week,\n\t\tnew_cases,\n\t\ttests_done,\n\t\tpopulation,\n\t\ttesting_rate,\n\t\tpositivity_rate,\n\t\ttesting_data_source\n\t),\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectReqFields\nDimDateSource aggregate(groupBy(ecdc_year_week = year+'-W'+lpad(week_of_year,2,'0')),\n\tweek_start_date = min(date),\n\t\tweek_end_date = max(date)) ~> AggregateDimDate\nSelectReqFields, CountrySource lookup(country_code == country_code_2_digit,\n\tmultiple: false,\n\tpickup: 'any',\n\tpartitionBy('hash', 1),\n\tbroadcast: 'auto')~> LookupCountry\nLookupCountry select(mapColumn(\n\t\tcountry = SelectReqFields@country,\n\t\tcc_2_digit = country_code_2_digit,\n\t\tcc_3_digit = country_code_3_digit,\n\t\tyear_week,\n\t\tnew_cases,\n\t\ttests_done,\n\t\tpopulation = SelectReqFields@population,\n\t\ttesting_rate,\n\t\tpositivity_rate,\n\t\ttesting_data_source\n\t),\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectReqFieldsFrmLookUp\nSelectReqFieldsFrmLookUp, AggregateDimDate join(year_week == ecdc_year_week,\n\tjoinType:'inner',\n\tpartitionBy('hash', 1),\n\tbroadcast: 'auto')~> JoinWithDate\nJoinWithDate select(mapColumn(\n\t\tcountry,\n\t\tcc_2_digit,\n\t\tcc_3_digit,\n\t\tyear_week,\n\t\tweek_start_date,\n\t\tweek_end_date,\n\t\tnew_cases,\n\t\ttests_done,\n\t\tpopulation,\n\t\ttesting_rate,\n\t\tpositivity_rate,\n\t\ttesting_data_source\n\t),\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectReqFieldsFromJoin\nSelectReqFieldsFromJoin sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tcountry as string,\n\t\tcountry_code_2_digit as string,\n\t\tcountry_code_3_digit as string,\n\t\tpopulation as string,\n\t\t{confirmed cases_count} as string,\n\t\tdeaths_count as string,\n\t\treported_date as string,\n\t\tsource as string\n\t),\n\tpartitionFileNames:['testing.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> TestingSink"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_raw_testing')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pl_process_cases_deaths')]",
