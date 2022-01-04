@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_azdb_cases_deaths'"
 		},
+		"ls_azdb_hosp_adm_daily_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_azdb_hosp_adm_daily'"
+		},
 		"ls_blob_covid19reportingstoac_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_blob_covid19reportingstoac'"
@@ -721,6 +725,80 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pl_sqlize_hospital_admissions_daily')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Daily Hospital Admissions Data",
+						"description": "Copy Daily Hospital Admissions Data to SQL DB",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "TRUNCATE TABLE covid_reporting.hospital_admissions_daily;",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_processed_hospital_admissions_daily",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_azdb_sql_hosp_adm_daily",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_processed_hospital_admissions_daily')]",
+				"[concat(variables('factoryId'), '/datasets/ds_azdb_sql_hosp_adm_daily')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_azdb_sql_cases_deaths')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -775,6 +853,63 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_azdb_cases_deaths')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_azdb_sql_hosp_adm_daily')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_azdb_hosp_adm_daily",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "country",
+						"type": "varchar"
+					},
+					{
+						"name": "country_code_2_digit",
+						"type": "varchar"
+					},
+					{
+						"name": "country_code_3_digit",
+						"type": "varchar"
+					},
+					{
+						"name": "population",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "reported_date",
+						"type": "date"
+					},
+					{
+						"name": "hospital_occupancy_count",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "icu_occupancy_count",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "source",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "covid_reporting",
+					"table": "hospital_admissions_daily"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_azdb_hosp_adm_daily')]"
 			]
 		},
 		{
@@ -1477,6 +1612,19 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ls_azdb_hosp_adm_daily')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('ls_azdb_hosp_adm_daily_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ls_blob_covid19reportingstoac')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1750,7 +1898,7 @@
 							"name": "SelectDaily"
 						}
 					],
-					"script": "source(output(\n\t\tcountry as string,\n\t\tindicator as string,\n\t\tdate as date,\n\t\tyear_week as string,\n\t\tvalue as double,\n\t\tsource as string,\n\t\turl as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> HospitalAdmissionSource\nsource(output(\n\t\tcountry as string,\n\t\tcountry_code_2_digit as string,\n\t\tcountry_code_3_digit as string,\n\t\tcontinent as string,\n\t\tpopulation as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CountrySource\nsource(output(\n\t\tdate_key as string,\n\t\tdate as date,\n\t\tyear as string,\n\t\tmonth as short,\n\t\tday as short,\n\t\tday_name as string,\n\t\tday_of_year as short,\n\t\tweek_of_month as short,\n\t\tweek_of_year as string,\n\t\tmonth_name as string,\n\t\tyear_month as integer,\n\t\tyear_week as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> DimDateSource\nHospitalAdmissionSource select(mapColumn(\n\t\tcountry,\n\t\tindicator,\n\t\tvalue,\n\t\tsource,\n\t\teach(match(name=='date'),\n\t\t\t'reported_'+'date' = $$),\n\t\teach(match(name=='year_week'),\n\t\t\t'reported_'+'year_week' = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectReqFields\nSelectReqFields, CountrySource lookup(SelectReqFields@country == CountrySource@country,\n\tmultiple: false,\n\tpickup: 'any',\n\tbroadcast: 'auto')~> LookupCountry\nLookupCountry select(mapColumn(\n\t\tcountry = SelectReqFields@country,\n\t\tindicator,\n\t\treported_date,\n\t\treported_year_week,\n\t\tvalue,\n\t\tsource,\n\t\tcountry_code_2_digit,\n\t\tcountry_code_3_digit,\n\t\tpopulation\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectReqFieldFrmLookup\nSelectReqFieldFrmLookup split(indicator == 'Weekly new hospital admissions per 100k' || indicator == 'Weekly new ICU admissions per 100k',\n\tdisjoint: false) ~> SplitDailyFromWeekly@(Weekly, Daily)\nDimDateSource aggregate(groupBy(ecdc_year_week = year+'-W'+lpad(week_of_year,2,'0')),\n\tweek_start_date = min(date),\n\t\tweek_end_date = max(date)) ~> AggregateDimDate\nSplitDailyFromWeekly@Weekly, AggregateDimDate join(reported_year_week == ecdc_year_week,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JoinWithDate\nJoinWithDate pivot(groupBy(country,\n\t\tcountry_code_2_digit,\n\t\tcountry_code_3_digit,\n\t\tpopulation,\n\t\treported_year_week,\n\t\tweek_start_date,\n\t\tweek_end_date,\n\t\tsource),\n\tpivotBy(indicator, ['Weekly new hospital admissions per 100k', 'Weekly new ICU admissions per 100k']),\n\tcount = sum(value),\n\tcolumnNaming: '$V_$N',\n\tlateral: true) ~> PivotWeekly\nSplitDailyFromWeekly@Daily pivot(groupBy(country,\n\t\tcountry_code_2_digit,\n\t\tcountry_code_3_digit,\n\t\tpopulation,\n\t\treported_year_week,\n\t\tsource),\n\tpivotBy(indicator, ['Daily hospital occupancy', 'Daily ICU occupancy']),\n\tcount = sum(value),\n\tcolumnNaming: '$V_$N',\n\tlateral: true) ~> PivotDaily\nPivotWeekly sort(desc(reported_year_week, true),\n\tasc(country, true),\n\tpartitionBy('hash', 1)) ~> SortWeekly\nPivotDaily sort(desc(reported_year_week, true),\n\tasc(country, true),\n\tpartitionBy('hash', 1)) ~> SortDaily\nSortWeekly select(mapColumn(\n\t\tcountry,\n\t\tcountry_code_2_digit,\n\t\tcountry_code_3_digit,\n\t\tpopulation,\n\t\treported_year_week,\n\t\tweek_start_date,\n\t\tweek_end_date,\n\t\tsource,\n\t\tnew_hospital_admission = {Weekly new hospital admissions per 100k_count},\n\t\tnew_icu_admissions = {Weekly new ICU admissions per 100k_count}\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectWeekly\nSortDaily select(mapColumn(\n\t\tcountry,\n\t\tcountry_code_2_digit,\n\t\tcountry_code_3_digit,\n\t\tpopulation,\n\t\treported_year_week,\n\t\tsource,\n\t\tnew_hospitalisation_count = {Daily hospital occupancy_count},\n\t\tnew_icu_count = {Daily ICU occupancy_count}\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectDaily\nSelectWeekly sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['hospital_admissions_weekly.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WeeklySink\nSelectDaily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['hospital_admissions_daily.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> DailySink"
+					"script": "source(output(\n\t\tcountry as string,\n\t\tindicator as string,\n\t\tdate as date,\n\t\tyear_week as string,\n\t\tvalue as double,\n\t\tsource as string,\n\t\turl as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> HospitalAdmissionSource\nsource(output(\n\t\tcountry as string,\n\t\tcountry_code_2_digit as string,\n\t\tcountry_code_3_digit as string,\n\t\tcontinent as string,\n\t\tpopulation as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CountrySource\nsource(output(\n\t\tdate_key as string,\n\t\tdate as date,\n\t\tyear as string,\n\t\tmonth as short,\n\t\tday as short,\n\t\tday_name as string,\n\t\tday_of_year as short,\n\t\tweek_of_month as short,\n\t\tweek_of_year as string,\n\t\tmonth_name as string,\n\t\tyear_month as integer,\n\t\tyear_week as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> DimDateSource\nHospitalAdmissionSource select(mapColumn(\n\t\tcountry,\n\t\tindicator,\n\t\tvalue,\n\t\tsource,\n\t\teach(match(name=='date'),\n\t\t\t'reported_'+'date' = $$),\n\t\teach(match(name=='year_week'),\n\t\t\t'reported_'+'year_week' = $$)\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectReqFields\nSelectReqFields, CountrySource lookup(SelectReqFields@country == CountrySource@country,\n\tmultiple: false,\n\tpickup: 'any',\n\tbroadcast: 'auto')~> LookupCountry\nLookupCountry select(mapColumn(\n\t\tcountry = SelectReqFields@country,\n\t\tindicator,\n\t\treported_date,\n\t\treported_year_week,\n\t\tvalue,\n\t\tsource,\n\t\tcountry_code_2_digit,\n\t\tcountry_code_3_digit,\n\t\tpopulation\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectReqFieldFrmLookup\nSelectReqFieldFrmLookup split(indicator == 'Weekly new hospital admissions per 100k' || indicator == 'Weekly new ICU admissions per 100k',\n\tdisjoint: false) ~> SplitDailyFromWeekly@(Weekly, Daily)\nDimDateSource aggregate(groupBy(ecdc_year_week = year+'-W'+lpad(week_of_year,2,'0')),\n\tweek_start_date = min(date),\n\t\tweek_end_date = max(date)) ~> AggregateDimDate\nSplitDailyFromWeekly@Weekly, AggregateDimDate join(reported_year_week == ecdc_year_week,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> JoinWithDate\nJoinWithDate pivot(groupBy(country,\n\t\tcountry_code_2_digit,\n\t\tcountry_code_3_digit,\n\t\tpopulation,\n\t\treported_year_week,\n\t\tweek_start_date,\n\t\tweek_end_date,\n\t\tsource),\n\tpivotBy(indicator, ['Weekly new hospital admissions per 100k', 'Weekly new ICU admissions per 100k']),\n\tcount = sum(value),\n\tcolumnNaming: '$V_$N',\n\tlateral: true) ~> PivotWeekly\nSplitDailyFromWeekly@Daily pivot(groupBy(country,\n\t\tcountry_code_2_digit,\n\t\tcountry_code_3_digit,\n\t\tpopulation,\n\t\treported_date,\n\t\tsource),\n\tpivotBy(indicator, ['Daily hospital occupancy', 'Daily ICU occupancy']),\n\tcount = sum(value),\n\tcolumnNaming: '$V_$N',\n\tlateral: true) ~> PivotDaily\nPivotWeekly sort(desc(reported_year_week, true),\n\tasc(country, true),\n\tpartitionBy('hash', 1)) ~> SortWeekly\nPivotDaily sort(desc(reported_date, true),\n\tasc(country, true),\n\tpartitionBy('hash', 1)) ~> SortDaily\nSortWeekly select(mapColumn(\n\t\tcountry,\n\t\tcountry_code_2_digit,\n\t\tcountry_code_3_digit,\n\t\tpopulation,\n\t\treported_year_week,\n\t\tweek_start_date,\n\t\tweek_end_date,\n\t\tsource,\n\t\tnew_hospital_admission = {Weekly new hospital admissions per 100k_count},\n\t\tnew_icu_admissions = {Weekly new ICU admissions per 100k_count}\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectWeekly\nSortDaily select(mapColumn(\n\t\tcountry,\n\t\tcountry_code_2_digit,\n\t\tcountry_code_3_digit,\n\t\tpopulation,\n\t\treported_date,\n\t\tsource,\n\t\tnew_hospitalisation_count = {Daily hospital occupancy_count},\n\t\tnew_icu_count = {Daily ICU occupancy_count}\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> SelectDaily\nSelectWeekly sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['hospital_admissions_weekly.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> WeeklySink\nSelectDaily sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['hospital_admissions_daily.csv'],\n\tumask: 0022,\n\tpreCommands: [],\n\tpostCommands: [],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> DailySink"
 				}
 			},
 			"dependsOn": [

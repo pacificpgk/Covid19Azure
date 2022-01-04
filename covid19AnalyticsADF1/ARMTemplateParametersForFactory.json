@@ -8,6 +8,9 @@
 		"ls_azdb_cases_deaths_connectionString": {
 			"value": ""
 		},
+		"ls_azdb_hosp_adm_daily_connectionString": {
+			"value": ""
+		},
 		"ls_blob_covid19reportingstoac_connectionString": {
 			"value": ""
 		},

@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_azdb_cases_deaths'"
 		},
+		"ls_azdb_hosp_adm_daily_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_azdb_hosp_adm_daily'"
+		},
 		"ls_blob_covid19reportingstoac_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_blob_covid19reportingstoac'"
@@ -64,6 +68,9 @@
 					},
 					"ls_azdb_cases_deaths_connectionString": {
 						"value": "[parameters('ls_azdb_cases_deaths_connectionString')]"
+					},
+					"ls_azdb_hosp_adm_daily_connectionString": {
+						"value": "[parameters('ls_azdb_hosp_adm_daily_connectionString')]"
 					},
 					"ls_blob_covid19reportingstoac_connectionString": {
 						"value": "[parameters('ls_blob_covid19reportingstoac_connectionString')]"
