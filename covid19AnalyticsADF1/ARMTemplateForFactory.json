@@ -670,7 +670,7 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFileName": "*",
+									"wildcardFileName": "cases_and-deaths.csv",
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
