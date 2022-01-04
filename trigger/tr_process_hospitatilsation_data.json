@@ -17,7 +17,7 @@
 				{
 					"type": "TumblingWindowTriggerDependencyReference",
 					"referenceTrigger": {
-						"referenceName": "tr_process_cases_deaths_data",
+						"referenceName": "tr_ingest_ecdc_data",
 						"type": "TriggerReference"
 					}
 				}
