@@ -1353,6 +1353,61 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pl_execute_population_file')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Pipelines for Population Ingestion",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pl_ingest_population_data",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": false,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Execute Pipeline for Population Processing",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute Pipelines for Population Ingestion",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "pl_process_population_data",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Execute"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pl_ingest_population_data')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_process_cases_deaths')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1509,60 +1564,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/df_transform_population_by_age')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_process_testing')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Process the testing files",
-				"activities": [
-					{
-						"name": "df_transform_testing",
-						"description": "Pipeline to execute dataflow to transform testing data",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "df_transform_testing",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"TestingSource": {},
-									"CountrySource": {},
-									"DimDateSource": {},
-									"TestingSink": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Process"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/df_transform_testing')]"
 			]
 		}
 	]
