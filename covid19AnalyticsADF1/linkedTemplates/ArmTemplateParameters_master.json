@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "covid19AnalyticsADF1"
 		},
+		"ls_azdb_cases_deaths_connectionString": {
+			"value": ""
+		},
 		"ls_blob_covid19reportingstoac_connectionString": {
 			"value": ""
 		},
