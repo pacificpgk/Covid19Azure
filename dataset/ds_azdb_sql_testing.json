@@ -5,6 +5,9 @@
 			"referenceName": "ls_azdb_testing",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "SQLize"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [

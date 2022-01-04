@@ -5,6 +5,9 @@
 			"referenceName": "ls_dl_covid19reportingdtlk",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Raw"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {

@@ -136,6 +136,9 @@
 				"type": "String"
 			}
 		},
+		"folder": {
+			"name": "Ingest"
+		},
 		"annotations": [],
 		"lastPublishTime": "2021-12-26T15:43:45Z"
 	},

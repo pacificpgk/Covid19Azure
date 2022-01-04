@@ -5,6 +5,9 @@
 			"referenceName": "ls_azdb_hosp_adm_daily",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "SQLize"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [
