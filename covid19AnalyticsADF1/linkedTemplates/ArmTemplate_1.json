@@ -21,6 +21,9 @@
 					"referenceName": "ls_dl_covid19reportingdtlk",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Processed"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -47,6 +50,9 @@
 					"referenceName": "ls_dl_covid19reportingdtlk",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Processed"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -72,6 +78,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_dl_covid19reportingdtlk",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Processed"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -131,6 +140,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_dl_covid19reportingdtlk",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Raw"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -196,6 +208,9 @@
 					"referenceName": "ls_dl_covid19reportingdtlk",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Raw"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -252,6 +267,9 @@
 					"referenceName": "ls_dl_covid19reportingdtlk",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Raw"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -283,6 +301,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_dl_covid19reportingdtlk",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Raw"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -483,6 +504,9 @@
 					"sourceRelativeURL": {
 						"type": "String"
 					}
+				},
+				"folder": {
+					"name": "Ingest"
 				},
 				"annotations": [],
 				"lastPublishTime": "2021-12-26T15:43:45Z"
@@ -695,6 +719,9 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"folder": {
+					"name": "Ingest"
+				},
 				"annotations": [],
 				"lastPublishTime": "2021-12-26T14:25:55Z"
 			},
@@ -767,6 +794,9 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"folder": {
+					"name": "SQLize"
+				},
 				"annotations": []
 			},
 			"dependsOn": []
@@ -838,6 +868,9 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "SQLize"
 				},
 				"annotations": []
 			},
@@ -1032,6 +1065,9 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "SQLize"
 				},
 				"annotations": []
 			},
@@ -1359,6 +1395,9 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"folder": {
+					"name": "Process"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1410,6 +1449,9 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"folder": {
+					"name": "Process"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1459,6 +1501,9 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Process"
 				},
 				"annotations": []
 			},
@@ -1510,6 +1555,9 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Process"
 				},
 				"annotations": []
 			},

@@ -183,6 +183,9 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"folder": {
+					"name": "Process"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -197,6 +200,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_azdb_cases_deaths",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "SQLize"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -255,6 +261,9 @@
 					"referenceName": "ls_azdb_hosp_adm_daily",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "SQLize"
+				},
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [
@@ -311,6 +320,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_azdb_testing",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "SQLize"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -377,6 +389,9 @@
 					"referenceName": "ls_dl_covid19reportingdtlk",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Lookup"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -426,6 +441,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_dl_covid19reportingdtlk",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Lookup"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -505,6 +523,9 @@
 					"referenceName": "ls_blob_covid19reportingstoac",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Raw"
+				},
 				"annotations": [],
 				"type": "Json",
 				"typeProperties": {
@@ -533,6 +554,9 @@
 					"pm_destFileName": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "Raw"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -577,6 +601,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "Raw"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -606,6 +633,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_blob_covid19reportingstoac",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Raw"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -637,6 +667,9 @@
 					"referenceName": "ls_dl_covid19reportingdtlk",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Raw"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -666,6 +699,9 @@
 					"referenceName": "ls_dl_covid19reportingdtlk",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Processed"
+				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
@@ -693,6 +729,9 @@
 				"linkedServiceName": {
 					"referenceName": "ls_dl_covid19reportingdtlk",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Processed"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
