@@ -29,7 +29,7 @@
 		"ls_http_ecdc_eu_data_properties_typeProperties_url": {
 			"value": "@{linkedService().sourceBaseURL}"
 		},
-		"tr_start_copy_process_properties_typeProperties_scope": {
+		"tr_execute_population_data_properties_typeProperties_scope": {
 			"value": "/subscriptions/3ceb2155-dd29-4741-8520-aed8ee3f4763/resourceGroups/pacificpgkRG/providers/Microsoft.Storage/storageAccounts/covid19reportingstoac"
 		}
 	}
