@@ -669,8 +669,7 @@
 								"type": "DelimitedTextSource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFileName": "cases_and-deaths.csv",
+									"fileListPath": "processed/ecdc/case_deaths",
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
