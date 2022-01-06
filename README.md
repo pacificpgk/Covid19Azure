@@ -8,3 +8,6 @@ Following are the purpose of this project:
  4. Transformations include derivations and filteration of data.
  5. Transformed data is stored in Azure SQL DB.
  6. Power BI is used to import the data from Azure SQL and generate meaningful insights through visualisation.
+ 7. Please refer to AzureDataFactory.pdf for the flow of data.
+
+
