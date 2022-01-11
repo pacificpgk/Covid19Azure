@@ -1,5 +1,7 @@
 # Data Ingestion
 
+This process brings in population data in Data Factory from a file.
+
 ![image](https://user-images.githubusercontent.com/30026192/148948201-f71f15ce-7906-4980-9e14-3d9d54c8f2b5.png)
 
 ![image](https://user-images.githubusercontent.com/30026192/148950383-98b4b426-41af-4eb3-9cab-15b76ad4b694.png)
