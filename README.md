@@ -69,7 +69,8 @@ Following are the purpose of this project:
     </tbody>
 </table> 
 
-# Linked Service:
+# [Linked Service](https://github.com/pacificpgk/Covid19Azure/blob/main/Linked_Service.md)
+
 ls_blob_covid19reportingstoac
 
 ![image](https://user-images.githubusercontent.com/30026192/148940127-77736fe9-c9fc-4f85-8603-3526f156f9e8.png)
