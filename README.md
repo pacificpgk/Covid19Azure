@@ -14,41 +14,56 @@ Following are the purpose of this project:
 
 ![image](https://user-images.githubusercontent.com/30026192/148900408-10234755-77db-4654-b4f7-05c5dc2e0078.png)
 
-Data sources:
+# Data sources:
 
-SmartFoods Rest API:
-Type	Rest API
-Authentication	Oauth2
-Data Endpoints	
-Order line Transactions (CSV)
-
-Customers (JSON)
-
-Auth Token (JSON)
-
-Frequency	Daily
-Documentation	https://github.com/Mmodarre/retailDataGeneratorAzureFunction
-SmartFoods Items
-Type	On premises Local file system
-Authentication	NA
-Data Endpoints	
-Food (CSV)
-
-Food-Nutrition (CSV)
-
-Nutrition (CSV)
-
-Frequency	NA – One Off
-Documentation	
-WWI OLTP
-Type	SFTP
-Authentication	Username/Password
-Data Endpoints	
-Orderline Transactions (Parquet)
-
-Orders Transactions (Parquet)
-
-Customers (Parquet)
-
-Frequency	Daily
-Documentation	
+<table>
+    <thead>
+        <tr>
+            <th>Source Dataset Name</th>
+            <th>Source File Name</th>
+            <th>Linked Service Name</th>
+            <th>Target Dataset Name</th>
+            <th>Target File Name</th>
+            <th>Source</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ds_population_raw_gz</td>
+            <td>population_by_age.tsv.gz</td>
+            <td>ls_blob_covid19reportingstoac</td>
+            <td>ds_population_raw_tsv</td>
+            <td>population_by_age_tsv</td>
+            <td>Downloaded File</td>
+        </tr>
+        <tr>
+            <td rowspan=2>ds_ecdc_raw_http</td>
+            <td>cases_deaths.csv</td>
+            <td rowspan=5>ls_dl_covid19reportingdtlk</td>
+            <td rowspan=2>ds_ecdc_raw_csv_dl</td>
+            <td>cases_deaths.csv</td>
+            <td>Github Site</td>
+        </tr>
+        <tr>
+            <td>hospital_admissions.csv</td>
+            <td>hospital_admissions.csv</td>
+            <td>Github Site</td>
+        </tr>
+        <tr>
+            <td rowspan=3>NA</td>
+            <td rowspan=3>NA</td>
+            <td>ds_raw_testing</td>
+            <td>testing.csv</td>
+            <td>Downloaded File</td>
+        </tr>
+        <tr>
+            <td>ds_country_lookup</td>
+            <td>country_lookup.csv</td>
+            <td rowspan=2>Lookup File</td>
+        </tr>
+        <tr>
+            <td>ds_dim_date_lookup</td>
+            <td>dim_date.csv</td>
+        </tr>
+    </tbody>
+</table> 
