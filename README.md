@@ -78,4 +78,7 @@ ls_dl_covid19reportingdtlk
 ls_http_ecdc_eu_data
 ![image](https://user-images.githubusercontent.com/30026192/148940545-351fa4f9-145b-4ad6-a83b-6bc094063de0.png)
 
-# [Ingest Population Data:] (https://github.com/pacificpgk/Covid19Azure/blob/main/Data%20Ingestion)
+[Before the hands-on lab (Prepare the environment)
+1](#before-the-hands-on-lab-prepare-the-environment)
+
+[Ingest Population Data:](htps://github.com/pacificpgk/Covid19Azure/blob/main/Data%20Ingestion)
