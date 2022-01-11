@@ -70,6 +70,28 @@ Following are the purpose of this project:
 
 # Linked Service:
 ls_blob_covid19reportingstoac
-
 ![image](https://user-images.githubusercontent.com/30026192/148940127-77736fe9-c9fc-4f85-8603-3526f156f9e8.png)
+
+ls_dl_covid19reportingdtlk
+![image](https://user-images.githubusercontent.com/30026192/148940255-5940b9f6-6527-49bd-a559-db0da6b1f266.png)
+
+ls_http_ecdc_eu_data
+![image](https://user-images.githubusercontent.com/30026192/148940545-351fa4f9-145b-4ad6-a83b-6bc094063de0.png)
+
+#Ingest Population Data:
+![image](https://user-images.githubusercontent.com/30026192/148941394-ac7dbb3d-d3a0-46df-a057-915c4970d651.png)
+
+![image](https://user-images.githubusercontent.com/30026192/148941487-4498eedb-1671-4712-b8e9-d7358ec6f913.png)
+
+![image](https://user-images.githubusercontent.com/30026192/148941632-d07f5de6-d626-44b2-b8fa-56dedfaa2443.png)
+
+![image](https://user-images.githubusercontent.com/30026192/148941706-ce9a7efa-f7d5-458f-b3c0-f8975ffc6ec6.png)
+
+![image](https://user-images.githubusercontent.com/30026192/148941795-a7c681c5-980b-4294-a4b3-3df38686f3ff.png)
+
+![image](https://user-images.githubusercontent.com/30026192/148941973-4d54e879-3375-414b-b572-cc90735df978.png)
+
+![image](https://user-images.githubusercontent.com/30026192/148942075-53f488ed-7ea8-4520-a6a8-6822249e26bd.png)
+
+
 
