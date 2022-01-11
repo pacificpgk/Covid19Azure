@@ -13,3 +13,42 @@ Following are the purpose of this project:
 # High Level Architecture
 
 ![image](https://user-images.githubusercontent.com/30026192/148900408-10234755-77db-4654-b4f7-05c5dc2e0078.png)
+
+Data sources:
+
+SmartFoods Rest API:
+Type	Rest API
+Authentication	Oauth2
+Data Endpoints	
+Order line Transactions (CSV)
+
+Customers (JSON)
+
+Auth Token (JSON)
+
+Frequency	Daily
+Documentation	https://github.com/Mmodarre/retailDataGeneratorAzureFunction
+SmartFoods Items
+Type	On premises Local file system
+Authentication	NA
+Data Endpoints	
+Food (CSV)
+
+Food-Nutrition (CSV)
+
+Nutrition (CSV)
+
+Frequency	NA – One Off
+Documentation	
+WWI OLTP
+Type	SFTP
+Authentication	Username/Password
+Data Endpoints	
+Orderline Transactions (Parquet)
+
+Orders Transactions (Parquet)
+
+Customers (Parquet)
+
+Frequency	Daily
+Documentation	
