@@ -10,6 +10,6 @@ Following are the purpose of this project:
  6. Power BI is used to import the data from Azure SQL and generate meaningful insights through visualisation.
  
  
-High Level Architecture
+# High Level Architecture
 
 ![image](https://user-images.githubusercontent.com/30026192/148900408-10234755-77db-4654-b4f7-05c5dc2e0078.png)
