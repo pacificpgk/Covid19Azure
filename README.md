@@ -37,11 +37,11 @@ Following are the purpose of this project:
             <td>Downloaded File</td>
         </tr>
         <tr>
-            <td rowspan=2>ds_ecdc_raw_http</td>
+            <td rowspan=3>ds_ecdc_raw_http</td>
             <td>cases_deaths.csv</td>
             <td rowspan=5>ls_dl_covid19r
              eportingdtlk</td>
-            <td rowspan=2>ds_ecdc_raw_csv_dl</td>
+            <td rowspan=3>ds_ecdc_raw_csv_dl</td>
             <td>cases_deaths.csv</td>
             <td>Github Site</td>
         </tr>
@@ -51,13 +51,13 @@ Following are the purpose of this project:
             <td>Github Site</td>
         </tr>
         <tr>
-            <td rowspan=3>NA</td>
-            <td rowspan=3>NA</td>
-            <td>ds_raw_testing</td>
+            <td>testing.csv</td>
             <td>testing.csv</td>
             <td>Downloaded File</td>
         </tr>
         <tr>
+            <td rowspan=2>NA</td>
+            <td rowspan=2>NA</td>         
             <td>ds_country_lookup</td>
             <td>country_lookup.csv</td>
             <td rowspan=2>Lookup File</td>
