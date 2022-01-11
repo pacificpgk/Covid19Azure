@@ -67,3 +67,9 @@ Following are the purpose of this project:
         </tr>
     </tbody>
 </table> 
+
+# Linked Service:
+ls_blob_covid19reportingstoac
+
+![image](https://user-images.githubusercontent.com/30026192/148940127-77736fe9-c9fc-4f85-8603-3526f156f9e8.png)
+
