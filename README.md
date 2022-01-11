@@ -39,7 +39,8 @@ Following are the purpose of this project:
         <tr>
             <td rowspan=2>ds_ecdc_raw_http</td>
             <td>cases_deaths.csv</td>
-            <td rowspan=5>ls_dl_covid19reportingdtlk</td>
+            <td rowspan=5>ls_dl_covid19r
+             eportingdtlk</td>
             <td rowspan=2>ds_ecdc_raw_csv_dl</td>
             <td>cases_deaths.csv</td>
             <td>Github Site</td>
@@ -81,7 +82,4 @@ ls_http_ecdc_eu_data
 
 ![image](https://user-images.githubusercontent.com/30026192/148940545-351fa4f9-145b-4ad6-a83b-6bc094063de0.png)
 
-[Before the hands-on lab (Prepare the environment)
-1](#before-the-hands-on-lab-prepare-the-environment)
-
-[Ingest Population Data:](htps://github.com/pacificpgk/Covid19Azure/blob/main/Data_Ingestion)
+# [Ingest Population Data](https://github.com/pacificpgk/Covid19Azure/blob/main/Data_Ingestion.md)
