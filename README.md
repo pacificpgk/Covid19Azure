@@ -72,3 +72,5 @@ Following are the purpose of this project:
 # [Linked Service](https://github.com/pacificpgk/Covid19Azure/blob/main/Linked_Service.md)
 
 # [Ingest Population Data](https://github.com/pacificpgk/Covid19Azure/blob/main/Data_Ingestion.md)
+
+# [Ingest ECDC Data](https://github.com/pacificpgk/Covid19Azure/blob/main/ECDC_Data.md)
